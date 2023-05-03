@@ -1,0 +1,760 @@
+diff --git a/ast/ast.go b/ast/ast.go
+index 087e52f..7509a0e 100644
+--- a/ast/ast.go
++++ b/ast/ast.go
+@@ -423,6 +423,14 @@ type ImportStr struct {
+ 
+ // ---------------------------------------------------------------------------
+ 
++// ImportWASM represents importwasm "file".
++type ImportWASM struct {
++	NodeBase
++	File *LiteralString
++}
++
++// ---------------------------------------------------------------------------
++
+ // Index represents both e[e] and the syntax sugar e.f.
+ //
+ // One of index and id will be nil before desugaring.  After desugaring id
+diff --git a/ast/clone.go b/ast/clone.go
+index ce877b0..917539d 100644
+--- a/ast/clone.go
++++ b/ast/clone.go
+@@ -169,6 +169,13 @@ func clone(astPtr *Node) {
+ 		r.File = new(LiteralString)
+ 		*r.File = *node.File
+ 
++	case *ImportWASM:
++		r := new(ImportWASM)
++		*astPtr = r
++		*r = *node
++		r.File = new(LiteralString)
++		*r.File = *node.File
++
+ 	case *Index:
+ 		r := new(Index)
+ 		*astPtr = r
+diff --git a/ffi_examples/c_ffi_example.jsonnet b/ffi_examples/c_ffi_example.jsonnet
+new file mode 100644
+index 0000000..40d1953
+--- /dev/null
++++ b/ffi_examples/c_ffi_example.jsonnet
+@@ -0,0 +1,5 @@
++{
++    local lib = importwasm "c-library.wasm",
++    markdown: lib.markdown_compile(markdown_text="Text **text** *text* text."),
++    sha: lib.calculate_sha("hello, world")
++}
+diff --git a/ffi_examples/rust_ffi_example.jsonnet b/ffi_examples/rust_ffi_example.jsonnet
+new file mode 100644
+index 0000000..649ecc7
+--- /dev/null
++++ b/ffi_examples/rust_ffi_example.jsonnet
+@@ -0,0 +1,5 @@
++{
++    local lib = importwasm "rust-library.wasm",
++    markdown: lib.markdown_compile(markdown_text="Text **text** *text* text."),
++    sha: lib.calculate_sha("hello, world")
++}
+diff --git a/go.mod b/go.mod
+index 606297c..ba3dd79 100644
+--- a/go.mod
++++ b/go.mod
+@@ -3,8 +3,12 @@ module github.com/google/go-jsonnet
+ go 1.13
+ 
+ require (
++	github.com/bytecodealliance/wasmtime-go v1.0.0 // indirect
+ 	github.com/fatih/color v1.10.0
+ 	github.com/sergi/go-diff v1.1.0
++	github.com/wasmerio/wasmer-go v1.0.4 // indirect
++	go.mongodb.org/mongo-driver v1.8.2 // indirect
++	golang.org/x/sys v0.0.0-20220909162455-aba9fc2a8ff2 // indirect
+ 	gopkg.in/yaml.v2 v2.2.7 // indirect
+ 	sigs.k8s.io/yaml v1.1.0
+ )
+diff --git a/go.sum b/go.sum
+index e330eb4..6367809 100644
+--- a/go.sum
++++ b/go.sum
+@@ -1,8 +1,15 @@
++github.com/bytecodealliance/wasmtime-go v1.0.0 h1:9u9gqaUiaJeN5IoD1L7egD8atOnTGyJcNp8BhkL9cUU=
++github.com/bytecodealliance/wasmtime-go v1.0.0/go.mod h1:jjlqQbWUfVSbehpErw3UoWFndBXRRMvfikYH6KsCwOg=
+ github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
+ github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+ github.com/fatih/color v1.10.0 h1:s36xzo75JdqLaaWoiEHk767eHiwo0598uUxyfiPkDsg=
+ github.com/fatih/color v1.10.0/go.mod h1:ELkj/draVOlAH/xkhN6mQ50Qd0MPOk5AAr3maGEBuJM=
++github.com/go-stack/stack v1.8.0 h1:5SgMzNM5HxrEjV0ww2lTmX6E2Izsfxas4+YHWRs3Lsk=
++github.com/go-stack/stack v1.8.0/go.mod h1:v0f6uXyyMGvRgIKkXu+yp6POWl0qKG85gN/melR3HDY=
++github.com/golang/snappy v0.0.1/go.mod h1:/XxbfmMg8lxefKM7IXC3fBNl/7bRcc72aCRzEWrmP2Q=
++github.com/google/go-cmp v0.5.2/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
++github.com/klauspost/compress v1.13.6/go.mod h1:/3/Vjq9QcHkK5uEr5lBEmyoZ1iFhe47etQ6QUkpK6sk=
+ github.com/kr/pretty v0.1.0 h1:L/CwN0zerZDmRFUapSPitk6f+Q3+0za1rQkzVuMiMFI=
+ github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
+ github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
+@@ -12,23 +19,61 @@ github.com/mattn/go-colorable v0.1.8 h1:c1ghPdyEDarC70ftn0y+A/Ee++9zz8ljHG1b13eJ
+ github.com/mattn/go-colorable v0.1.8/go.mod h1:u6P/XSegPjTcexA+o6vUJrdnUu04hMope9wVRipJSqc=
+ github.com/mattn/go-isatty v0.0.12 h1:wuysRhFDzyxgEmMf5xjvJ2M9dZoWAXNNr5LSBS7uHXY=
+ github.com/mattn/go-isatty v0.0.12/go.mod h1:cbi8OIDigv2wuxKPP5vlRcQ1OAZbq2CE4Kysco4FUpU=
++github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe/go.mod h1:wL8QJuTMNUDYhXwkmfOly8iTdp5TEcJFWZD2D7SIkUc=
++github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLANZcx1PVRCS0qkT7pwLkGfwJo4zjcN/Tysno=
++github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
+ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
+ github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
+ github.com/sergi/go-diff v1.1.0 h1:we8PVUC3FE2uYfodKH/nBHMSetSfHDR6scGdBi+erh0=
+ github.com/sergi/go-diff v1.1.0/go.mod h1:STckp+ISIX8hZLjrqAeVduY0gWCT9IjLuqbuNXdaHfM=
+ github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
++github.com/stretchr/objx v0.4.0/go.mod h1:YvHI0jy2hoMjB+UWwv71VJQ9isScKT/TqJzVSSt89Yw=
+ github.com/stretchr/testify v1.4.0 h1:2E4SXV/wtOkTonXsotYi4li6zVWxYlZuYNCXe9XRJyk=
+ github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
++github.com/stretchr/testify v1.6.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
++github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
++github.com/stretchr/testify v1.7.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
++github.com/stretchr/testify v1.8.0/go.mod h1:yNjHg4UonilssWZ8iaSj1OCr/vHnekPRkoO+kdMU+MU=
++github.com/tidwall/pretty v1.0.0/go.mod h1:XNkn88O1ChpSDQmQeStsy+sBenx6DDtFZJxhVysOjyk=
++github.com/wasmerio/wasmer-go v1.0.4 h1:MnqHoOGfiQ8MMq2RF6wyCeebKOe84G88h5yv+vmxJgs=
++github.com/wasmerio/wasmer-go v1.0.4/go.mod h1:0gzVdSfg6pysA6QVp6iVRPTagC6Wq9pOE8J86WKb2Fk=
++github.com/xdg-go/pbkdf2 v1.0.0/go.mod h1:jrpuAogTd400dnrH08LKmI/xc1MbPOebTwRqcT5RDeI=
++github.com/xdg-go/scram v1.0.2/go.mod h1:1WAq6h33pAW+iRreB34OORO2Nf7qel3VV3fjBj+hCSs=
++github.com/xdg-go/stringprep v1.0.2/go.mod h1:8F9zXuvzgwmyT5DUm4GUfZGDdT3W+LCvS6+da4O5kxM=
++github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d/go.mod h1:rHwXgn7JulP+udvsHwJoVG1YGAP6VLg4y9I5dyZdqmA=
++go.mongodb.org/mongo-driver v1.8.2 h1:8ssUXufb90ujcIvR6MyE1SchaNj0SFxsakiZgxIyrMk=
++go.mongodb.org/mongo-driver v1.8.2/go.mod h1:0sQWfOeY63QTntERDJJ/0SuKK0T1uVSgKCuAROlKEPY=
++golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
++golang.org/x/crypto v0.0.0-20201216223049-8b5274cf687f/go.mod h1:jdWPYTVW3xRLrWPugEBEK3UY2ZEsg3UU495nc5E+M+I=
++golang.org/x/net v0.0.0-20190311183353-d8887717615a/go.mod h1:t9HGtf8HONx5eT2rtn7q6eTqICYqUVnKs3thJo3Qplg=
++golang.org/x/net v0.0.0-20190404232315-eb5bcb51f2a3/go.mod h1:t9HGtf8HONx5eT2rtn7q6eTqICYqUVnKs3thJo3Qplg=
++golang.org/x/sync v0.0.0-20190423024810-112230192c58/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=
++golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=
++golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
++golang.org/x/sys v0.0.0-20191026070338-33540a1f6037/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+ golang.org/x/sys v0.0.0-20200116001909-b77594299b42/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+ golang.org/x/sys v0.0.0-20200223170610-d5e6a3e2c0ae h1:/WDfKMnPU+m5M4xB+6x4kaepxRw6jWvR5iDRdvjHgy8=
+ golang.org/x/sys v0.0.0-20200223170610-d5e6a3e2c0ae/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
++golang.org/x/sys v0.0.0-20220909162455-aba9fc2a8ff2 h1:wM1k/lXfpc5HdkJJyW9GELpd8ERGdnh8sMGL6Gzq3Ho=
++golang.org/x/sys v0.0.0-20220909162455-aba9fc2a8ff2/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
++golang.org/x/term v0.0.0-20201117132131-f5c789dd3221/go.mod h1:Nr5EML6q2oocZ2LXRh80K7BxOlk5/8JxuGnuhpl+muw=
++golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
++golang.org/x/text v0.3.5/go.mod h1:5Zoc/QRtKVWzQhOtBMvqHzDpF6irO9z98xDceosuGiQ=
++golang.org/x/tools v0.0.0-20180917221912-90fa682c2a6e/go.mod h1:n7NCudcB/nEzxVGmLbDWY5pfWTLqBcC2KZ6jyYvM4mQ=
++golang.org/x/tools v0.0.0-20190531172133-b3315ee88b7d/go.mod h1:/rFqwRUd4F7ZHNgwSSTFct+R/Kf4OFW1sUzUTQQTgfc=
++golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
+ gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
++gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
+ gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 h1:YR8cESwS4TdDjEe65xsg0ogRM/Nc3DYOhEAlW+xobZo=
+ gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
++gopkg.in/check.v1 v1.0.0-20200902074654-038fdea0a05b h1:QRR6H1YWRnHb4Y/HeNFCTJLFVxaq6wH4YuVdsUOr75U=
++gopkg.in/check.v1 v1.0.0-20200902074654-038fdea0a05b/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
+ gopkg.in/yaml.v2 v2.2.2/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=
+ gopkg.in/yaml.v2 v2.2.4 h1:/eiJrUcujPVeJ3xlSWaiNi3uSVmDGBK1pDHUHAnao1I=
+ gopkg.in/yaml.v2 v2.2.4/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=
+ gopkg.in/yaml.v2 v2.2.7 h1:VUgggvou5XRW9mHwD/yXxIYSMtY0zoKQf/v226p2nyo=
+ gopkg.in/yaml.v2 v2.2.7/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=
++gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
++gopkg.in/yaml.v3 v3.0.1/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
+ sigs.k8s.io/yaml v1.1.0 h1:4A07+ZFc2wgJwo8YNlQpr1rVlgUDlxXHhPJciaPY5gs=
+ sigs.k8s.io/yaml v1.1.0/go.mod h1:UJmg0vDUVViEyp3mgSv9WPwZCDxu4rQW1olrI1uml+o=
+diff --git a/imports.go b/imports.go
+index cf0e21e..bb87590 100644
+--- a/imports.go
++++ b/imports.go
+@@ -139,6 +139,45 @@ func (cache *importCache) importString(importedFrom, importedPath string, i *int
+ 	return makeValueString(data.String()), nil
+ }
+ 
++// ImportWASM imports a WASM library from a path.
++func (cache *importCache) importWASM(importedFrom, importedPath string, i *interpreter) (value, error) {
++	dir, _ := path.Split(importedFrom)
++	var absPath string
++	if path.IsAbs(importedPath) {
++		absPath = importedPath
++	} else {
++		absPath = path.Join(dir, importedPath)
++	}
++
++	var pv potentialValue
++	if cachedNode, isCached := cache.codeCache[absPath]; !isCached {
++		runtimeInstance, store, functionNames, err := makeRuntimeInstance(absPath)
++		if err != nil {
++			return nil, err
++		}
++		fields := make(simpleObjectFieldMap)
++
++		for _, functionName := range functionNames {
++			evalCallable, err := makeWASMFunction(functionName, runtimeInstance, store)
++			if err != nil {
++				return nil, err
++			}
++			fields[functionName] = simpleObjectField{hide: ast.ObjectFieldVisible, field: &readyValue{&valueFunction{
++				ec: evalCallable,
++			}}}
++		}
++
++		var asserts []unboundField
++		var locals []objectLocal
++		var bindingFrame = make(bindingFrame)
++		pv = readyThunk(makeValueSimpleObject(bindingFrame, fields, asserts, locals))
++		cache.codeCache[absPath] = pv
++	} else {
++		pv = cachedNode
++	}
++	return i.evaluatePV(pv)
++}
++
+ func nodeToPV(i *interpreter, filename string, node ast.Node) *cachedThunk {
+ 	env := makeInitialEnv(filename, i.baseStd)
+ 	return &cachedThunk{
+diff --git a/internal/formatter/fix_indentation.go b/internal/formatter/fix_indentation.go
+index 29a39a9..a42e88f 100644
+--- a/internal/formatter/fix_indentation.go
++++ b/internal/formatter/fix_indentation.go
+@@ -574,6 +574,11 @@ func (c *FixIndentation) Visit(expr ast.Node, currIndent indent, crowded bool) {
+ 		newIndent := c.newIndent(*openFodder(node.File), currIndent, c.column+1)
+ 		c.Visit(node.File, newIndent, true)
+ 
++	case *ast.ImportWASM:
++		c.column += 10 // importwasm
++		newIndent := c.newIndent(*openFodder(node.File), currIndent, c.column+1)
++		c.Visit(node.File, newIndent, true)
++
+ 	case *ast.InSuper:
+ 		c.Visit(node.Index, currIndent, crowded)
+ 		c.fill(node.InFodder, true, true, currIndent.lineUp)
+diff --git a/internal/formatter/unparser.go b/internal/formatter/unparser.go
+index 532f87f..fecc862 100644
+--- a/internal/formatter/unparser.go
++++ b/internal/formatter/unparser.go
+@@ -370,6 +370,10 @@ func (u *unparser) unparse(expr ast.Node, crowded bool) {
+ 		u.write("importstr")
+ 		u.unparse(node.File, true)
+ 
++	case *ast.ImportWASM:
++		u.write("importwasm")
++		u.unparse(node.File, true)
++
+ 	case *ast.Index:
+ 		u.unparse(node.Target, crowded)
+ 		u.fill(node.LeftBracketFodder, false, false) // Can also be DotFodder
+diff --git a/internal/parser/context.go b/internal/parser/context.go
+index 9952825..b2d9dab 100644
+--- a/internal/parser/context.go
++++ b/internal/parser/context.go
+@@ -68,6 +68,8 @@ func DirectChildren(node ast.Node) []ast.Node {
+ 		return nil
+ 	case *ast.ImportStr:
+ 		return nil
++	case *ast.ImportWASM:
++		return nil
+ 	case *ast.Index:
+ 		if node.Id != nil {
+ 			return nil // non-desugared dot reference
+@@ -185,6 +187,8 @@ func thunkChildren(node ast.Node) []ast.Node {
+ 		return nil
+ 	case *ast.ImportStr:
+ 		return nil
++	case *ast.ImportWASM:
++		return nil
+ 	case *ast.Index:
+ 		return nil
+ 	case *ast.Slice:
+@@ -308,6 +312,8 @@ func specialChildren(node ast.Node) []ast.Node {
+ 		return nil
+ 	case *ast.ImportStr:
+ 		return nil
++	case *ast.ImportWASM:
++		return nil
+ 	case *ast.Index:
+ 		return nil
+ 	case *ast.Slice:
+diff --git a/internal/parser/lexer.go b/internal/parser/lexer.go
+index 352b3df..d29d173 100644
+--- a/internal/parser/lexer.go
++++ b/internal/parser/lexer.go
+@@ -65,6 +65,7 @@ const (
+ 	tokenIf
+ 	tokenImport
+ 	tokenImportStr
++	tokenImportWASM
+ 	tokenIn
+ 	tokenLocal
+ 	tokenNullLit
+@@ -112,6 +113,7 @@ var tokenKindStrings = []string{
+ 	tokenIf:         "if",
+ 	tokenImport:     "import",
+ 	tokenImportStr:  "importstr",
++	tokenImportWASM: "importwasm",
+ 	tokenIn:         "in",
+ 	tokenLocal:      "local",
+ 	tokenNullLit:    "null",
+@@ -580,6 +582,8 @@ func getTokenKindFromID(str string) tokenKind {
+ 		return tokenImport
+ 	case "importstr":
+ 		return tokenImportStr
++	case "importwasm":
++		return tokenImportWASM
+ 	case "in":
+ 		return tokenIn
+ 	case "local":
+diff --git a/internal/parser/lexer_test.go b/internal/parser/lexer_test.go
+index 5b7841f..b254998 100644
+--- a/internal/parser/lexer_test.go
++++ b/internal/parser/lexer_test.go
+@@ -424,6 +424,12 @@ func TestImportstr(t *testing.T) {
+ 	})
+ }
+ 
++func TestWASM(t *testing.T) {
++	SingleTest(t, "importwasm", "", Tokens{
++		{kind: tokenImportWASM, data: "importwasm"},
++	})
++}
++
+ func TestIn(t *testing.T) {
+ 	SingleTest(t, "in", "", Tokens{
+ 		{kind: tokenIn, data: "in"},
+diff --git a/internal/parser/parser.go b/internal/parser/parser.go
+index c576074..9d6bd49 100644
+--- a/internal/parser/parser.go
++++ b/internal/parser/parser.go
+@@ -871,7 +871,7 @@ func (p *parser) parseTerminal() (ast.Node, errors.StaticError) {
+ 	switch tok.kind {
+ 	case tokenAssert, tokenBraceR, tokenBracketR, tokenComma, tokenDot, tokenElse,
+ 		tokenError, tokenFor, tokenFunction, tokenIf, tokenIn, tokenImport, tokenImportStr,
+-		tokenLocal, tokenOperator, tokenParenR, tokenSemicolon, tokenTailStrict, tokenThen:
++		tokenImportWASM, tokenLocal, tokenOperator, tokenParenR, tokenSemicolon, tokenTailStrict, tokenThen:
+ 		return nil, makeUnexpectedError(tok, "parsing terminal")
+ 
+ 	case tokenEndOfFile:
+@@ -1122,6 +1122,23 @@ func (p *parser) parse(prec precedence) (ast.Node, errors.StaticError) {
+ 		}
+ 		return nil, errors.MakeStaticError("Computed imports are not allowed", *body.Loc())
+ 
++	case tokenImportWASM:
++		p.pop()
++		body, err := p.parse(maxPrecedence)
++		if err != nil {
++			return nil, err
++		}
++		if lit, ok := body.(*ast.LiteralString); ok {
++			if lit.Kind == ast.StringBlock {
++				return nil, errors.MakeStaticError("Block string literals not allowed in imports", *body.Loc())
++			}
++			return &ast.ImportWASM{
++				NodeBase: ast.NewNodeBaseLoc(locFromTokenAST(begin, body), begin.fodder),
++				File:     lit,
++			}, nil
++		}
++		return nil, errors.MakeStaticError("Computed imports are not allowed", *body.Loc())
++
+ 	case tokenLocal:
+ 		p.pop()
+ 		var binds ast.LocalBinds
+diff --git a/internal/pass/pass.go b/internal/pass/pass.go
+index b3475fe..ce49473 100644
+--- a/internal/pass/pass.go
++++ b/internal/pass/pass.go
+@@ -48,6 +48,7 @@ type ASTPass interface {
+ 	Function(ASTPass, *ast.Function, Context)
+ 	Import(ASTPass, *ast.Import, Context)
+ 	ImportStr(ASTPass, *ast.ImportStr, Context)
++	ImportWASM(ASTPass, *ast.ImportWASM, Context)
+ 	Index(ASTPass, *ast.Index, Context)
+ 	Slice(ASTPass, *ast.Slice, Context)
+ 	Local(ASTPass, *ast.Local, Context)
+@@ -282,6 +283,12 @@ func (*Base) ImportStr(p ASTPass, node *ast.ImportStr, ctx Context) {
+ 	p.LiteralString(p, node.File, ctx)
+ }
+ 
++// ImportWASM traverses that kind of node
++func (*Base) ImportWASM(p ASTPass, node *ast.ImportWASM, ctx Context) {
++	p.Fodder(p, &node.File.Fodder, ctx)
++	p.LiteralString(p, node.File, ctx)
++}
++
+ // Index traverses that kind of node
+ func (*Base) Index(p ASTPass, node *ast.Index, ctx Context) {
+ 	p.Visit(p, &node.Target, ctx)
+@@ -419,6 +426,8 @@ func (*Base) Visit(p ASTPass, node *ast.Node, ctx Context) {
+ 		p.Import(p, node, ctx)
+ 	case *ast.ImportStr:
+ 		p.ImportStr(p, node, ctx)
++	case *ast.ImportWASM:
++		p.ImportWASM(p, node, ctx)
+ 	case *ast.Index:
+ 		p.Index(p, node, ctx)
+ 	case *ast.InSuper:
+diff --git a/internal/program/desugarer.go b/internal/program/desugarer.go
+index 38d959f..1cd5305 100644
+--- a/internal/program/desugarer.go
++++ b/internal/program/desugarer.go
+@@ -441,6 +441,14 @@ func desugar(astPtr *ast.Node, objLevel int) (err error) {
+ 			return
+ 		}
+ 
++	case *ast.ImportWASM:
++		// See comment in ast.Import.
++		var file ast.Node = node.File
++		err = desugar(&file, objLevel)
++		if err != nil {
++			return
++		}
++
+ 	case *ast.Index:
+ 		err = desugar(&node.Target, objLevel)
+ 		if err != nil {
+diff --git a/internal/program/static_analyzer.go b/internal/program/static_analyzer.go
+index e1a11a3..62ad1f2 100644
+--- a/internal/program/static_analyzer.go
++++ b/internal/program/static_analyzer.go
+@@ -93,6 +93,8 @@ func analyzeVisit(a ast.Node, inObject bool, vars ast.IdentifierSet) error {
+ 		//nothing to do here
+ 	case *ast.ImportStr:
+ 		//nothing to do here
++	case *ast.ImportWASM:
++		//nothing to do here
+ 	case *ast.InSuper:
+ 		if !inObject {
+ 			return errors.MakeStaticError("Can't use super outside of an object.", *a.Loc())
+diff --git a/interpreter.go b/interpreter.go
+index d3dac69..f7b397e 100644
+--- a/interpreter.go
++++ b/interpreter.go
+@@ -488,6 +488,10 @@ func (i *interpreter) evaluate(a ast.Node, tc tailCallStatus) (value, error) {
+ 		codePath := node.Loc().FileName
+ 		return i.importCache.importString(codePath, node.File.Value, i)
+ 
++	case *ast.ImportWASM:
++		codePath := node.Loc().FileName
++		return i.importCache.importWASM(codePath, node.File.Value, i)
++
+ 	case *ast.LiteralBoolean:
+ 		return makeValueBoolean(node.Value), nil
+ 
+diff --git a/linter/internal/types/build_graph.go b/linter/internal/types/build_graph.go
+index 1e0e35b..1b6b9d4 100644
+--- a/linter/internal/types/build_graph.go
++++ b/linter/internal/types/build_graph.go
+@@ -217,6 +217,8 @@ func calcTP(node ast.Node, varAt map[ast.Node]*common.Variable, g *typeGraph) ty
+ 		return tpRef(g.getExprPlaceholder(imported))
+ 	case *ast.ImportStr:
+ 		return tpRef(stringType)
++	case *ast.ImportWASM:
++		return tpRef(stringType)
+ 	case *ast.LiteralBoolean:
+ 		return tpRef(boolType)
+ 	case *ast.LiteralNull:
+diff --git a/linter/linter.go b/linter/linter.go
+index 4557448..4bf2521 100644
+--- a/linter/linter.go
++++ b/linter/linter.go
+@@ -124,6 +124,12 @@ func getImports(vm *jsonnet.VM, node nodeWithLocation, roots map[string]ast.Node
+ 		if err != nil {
+ 			errWriter.writeError(vm, errors.MakeStaticError(err.Error(), *node.Loc()))
+ 		}
++	case *ast.ImportWASM:
++		p := node.File.Value
++		_, err := vm.ResolveImport(currentPath, p)
++		if err != nil {
++			errWriter.writeError(vm, errors.MakeStaticError(err.Error(), *node.Loc()))
++		}
+ 	default:
+ 		for _, c := range parser.Children(node) {
+ 			getImports(vm, nodeWithLocation{c, currentPath}, roots, errWriter)
+diff --git a/value.go b/value.go
+index a35c3fd..820c6fc 100644
+--- a/value.go
++++ b/value.go
+@@ -39,6 +39,7 @@ type valueType struct {
+ var stringType = &valueType{"string"}
+ var numberType = &valueType{"number"}
+ var functionType = &valueType{"function"}
++var wasmFunctionType = &valueType{"wasmfunction"}
+ var objectType = &valueType{"object"}
+ var booleanType = &valueType{"boolean"}
+ var nullType = &valueType{"null"}
+diff --git a/vm.go b/vm.go
+index f4e6437..4779444 100644
+--- a/vm.go
++++ b/vm.go
+@@ -292,6 +292,21 @@ func (vm *VM) findDependencies(filePath string, node *ast.Node, dependencies map
+ 			}
+ 		}
+ 		dependencies[cleanedAbsPath] = struct{}{}
++	case *ast.ImportWASM:
++		foundAt, err := vm.ResolveImport(filePath, i.File.Value)
++		if err != nil {
++			*stackTrace = append([]traceFrame{{Loc: *i.Loc()}}, *stackTrace...)
++			return err
++		}
++		cleanedAbsPath = foundAt
++		if _, isFileImporter := vm.importer.(*FileImporter); isFileImporter {
++			cleanedAbsPath, err = getAbsPath(foundAt)
++			if err != nil {
++				*stackTrace = append([]traceFrame{{Loc: *i.Loc()}}, *stackTrace...)
++				return err
++			}
++		}
++		dependencies[cleanedAbsPath] = struct{}{}
+ 	default:
+ 		for _, node := range parser.Children(i) {
+ 			err = vm.findDependencies(filePath, &node, dependencies, stackTrace)
+diff --git a/wasm.go b/wasm.go
+new file mode 100644
+index 0000000..8acea0a
+--- /dev/null
++++ b/wasm.go
+@@ -0,0 +1,252 @@
++package jsonnet
++
++import (
++	"encoding/binary"
++	"fmt"
++	"io/ioutil"
++	"strings"
++
++	"github.com/bytecodealliance/wasmtime-go"
++	"github.com/google/go-jsonnet/ast"
++	"go.mongodb.org/mongo-driver/bson"
++)
++
++func (wasmFunction *wasmFunction) callFunction(functionName string, arguments []byte) (bson.Raw, error) {
++	return callFunction(wasmFunction.runtimeInstance, wasmFunction.store, functionName, arguments)
++}
++
++func callFunction(runtimeInstance *wasmtime.Instance, store *wasmtime.Store, functionName string, argumentBuffer []byte) (bson.Raw, error) {
++	allocate := runtimeInstance.GetFunc(store, "__jsonnet_internal_allocate")
++	if allocate == nil {
++		return nil, &wasmError{"allocation function not found in module"}
++	}
++	deallocate := runtimeInstance.GetFunc(store, "__jsonnet_internal_deallocate")
++	if deallocate == nil {
++		return nil, &wasmError{"deallocation function not found in module"}
++	}
++	memoryExport := runtimeInstance.GetExport(store, "memory")
++	if memoryExport == nil {
++		return nil, &wasmError{"memory not found in module"}
++	}
++	memory := memoryExport.Memory()
++	if memory == nil {
++		return nil, &wasmError{"memory not found in module"}
++	}
++
++	function := runtimeInstance.GetFunc(store, functionName)
++	if function == nil {
++		return nil, &wasmError{fmt.Sprintf("function %s not found in module", functionName)}
++	}
++	var bsonResult interface{}
++	var err error
++
++	if len(argumentBuffer) > 0 {
++		argumentsLen := len(argumentBuffer)
++
++		// prepare input
++		allocateResult, err := allocate.Call(store, argumentsLen)
++		if err != nil {
++			return nil, err
++		}
++		inputPointer := allocateResult.(int32)
++		inputMemoryChunk := memory.UnsafeData(store)[inputPointer:]
++
++		for i := 0; i < argumentsLen; i++ {
++			inputMemoryChunk[i] = argumentBuffer[i]
++		}
++		// get output
++		bsonResult, err = function.Call(store, inputPointer)
++		if err != nil {
++			return nil, err
++		}
++	} else {
++		bsonResult, err = function.Call(store)
++		if err != nil {
++			return nil, err
++		}
++	}
++
++	// parse output
++	outputPointer := bsonResult.(int32)
++	outputMemoryChunk := memory.UnsafeData(store)[outputPointer:]
++	outputSize := binary.LittleEndian.Uint32(outputMemoryChunk)
++
++	copiedMemory := make([]byte, outputSize)
++	copy(copiedMemory, outputMemoryChunk)
++	var raw bson.Raw = copiedMemory
++
++	deallocate.Call(store, outputPointer, outputSize)
++	return raw, nil
++}
++
++type wasmFunction struct {
++	functionName   string
++	runtimeInstance *wasmtime.Instance
++	store *wasmtime.Store
++	params         ast.Identifiers
++}
++
++func makeRuntimeInstance(filePath string) (*wasmtime.Instance, *wasmtime.Store, []string, error) {
++	engine := wasmtime.NewEngine()
++
++	data, err := ioutil.ReadFile(filePath)
++	if err != nil {
++		return nil, nil, nil, err
++	}
++
++	// Create a new module from the file with the lib.
++	module, err := wasmtime.NewModule(
++		engine,
++		data,
++	)
++	if err != nil {
++		return nil, nil, nil, err
++	}
++
++	linker := wasmtime.NewLinker(engine)
++	err = linker.DefineWasi()
++	if err != nil {
++		return nil, nil, nil, err
++	}
++
++	wasiConfig := wasmtime.NewWasiConfig()
++	store := wasmtime.NewStore(engine)
++	store.SetWasi(wasiConfig)
++	instance, err := linker.Instantiate(store, module)
++	if err != nil {
++		return nil, nil, nil, err
++	}
++
++	var functionNames []string
++
++	// lookup all function names in the module (only exported functions, ie. those that have a "__jsonnet_export_" prefix)
++	for _, v := range module.Exports() {
++		if v.Type().FuncType() != nil && strings.HasPrefix(v.Name(), "__jsonnet_export_") {
++			functionNames = append(functionNames, strings.TrimPrefix(v.Name(), "__jsonnet_export_"))
++		}
++	}
++
++	return instance, store, functionNames, nil
++}
++
++func makeWASMFunction(functionName string, runtimeInstance *wasmtime.Instance, store *wasmtime.Store) (*wasmFunction, error) {
++	metadataFunction := fmt.Sprintf("__jsonnet_internal_meta_%v", functionName)
++	result, err := callFunction(runtimeInstance, store, metadataFunction, []byte{})
++	if err != nil {
++		return nil, err
++	}
++	var paramNames []ast.Identifier
++	err = result.Lookup("").Unmarshal(&paramNames)
++	if err != nil {
++		return nil, err
++	}
++
++	return &wasmFunction{
++		functionName:   functionName,
++		runtimeInstance: runtimeInstance,
++		store: store,
++		params:         paramNames,
++	}, nil
++}
++
++func (wasmFunction *wasmFunction) evalCall(arguments callArguments, i *interpreter) (value, error) {
++	flatArgs := flattenArgs(arguments, wasmFunction.parameters(), []value{})
++	var bsonResult bson.Raw
++	exportedFunctionName := "__jsonnet_export_" + wasmFunction.functionName
++	if len(flatArgs) > 0 {
++		wasmArgs := make(map[string]interface{})
++		for index, arg := range flatArgs {
++			v, err := i.evaluatePV(arg)
++			if err != nil {
++				return nil, err
++			}
++			json, err := i.manifestJSON(v)
++			if err != nil {
++				return nil, err
++			}
++			wasmArgs[string(wasmFunction.params[index])] = json
++		}
++		marshalledArgs, err := bson.Marshal(wasmArgs)
++		if err != nil {
++			return nil, err
++		}
++		bsonResult, err = wasmFunction.callFunction(exportedFunctionName, marshalledArgs)
++		if err != nil {
++			return nil, err
++		}
++	} else {
++		var err error
++		bsonResult, err = wasmFunction.callFunction(exportedFunctionName, []byte{})
++		if err != nil {
++			return nil, err
++		}
++	}
++
++	return bsonToValue(bsonResult.Lookup(""))
++}
++
++type wasmError struct {
++	field string
++}
++
++func (e *wasmError) Error() string {
++	return e.field
++}
++
++func bsonToValue(bson bson.RawValue) (value, error) {
++	switch bson.Type {
++	case '\x01':
++		return makeValueNumber(bson.Double()), nil
++	case '\x02':
++		return makeValueString(bson.StringValue()), nil
++	case '\x03':
++		resultFields := make(simpleObjectFieldMap)
++		fields, err := bson.Document().Elements()
++		if err != nil {
++			return nil, err
++		}
++		for _, field := range fields {
++			fieldValue, err := bsonToValue(field.Value())
++			if err != nil {
++				return nil, err
++			}
++			resultFields[field.Key()] = simpleObjectField{hide: ast.ObjectFieldVisible, field: &readyValue{fieldValue}}
++		}
++		var asserts []unboundField
++		var locals []objectLocal
++		var bindingFrame = make(bindingFrame)
++		return makeValueSimpleObject(bindingFrame, resultFields, asserts, locals), nil
++	case '\x04':
++		var resultElements []*cachedThunk
++		elements, err := bson.Array().Elements()
++		if err != nil {
++			return nil, err
++		}
++		for _, element := range elements {
++			elementValue, err := bsonToValue(element.Value())
++			if err != nil {
++				return nil, err
++			}
++			resultElements = append(resultElements, readyThunk(elementValue))
++		}
++		return makeValueArray(resultElements), nil
++	case '\x08':
++		return makeValueBoolean(bson.Boolean()), nil
++	case '\x0A':
++		return makeValueNull(), nil
++	case '\x10':
++		return makeValueNumber(float64(bson.Int32())), nil
++	case '\x12':
++		return int64ToValue(bson.Int64()), nil
++	default:
++		return nil, &wasmError{field: fmt.Sprintf("couldn't serialize field of type %v", bson.Type)}
++	}
++}
++
++func (wasmFunction *wasmFunction) parameters() []namedParameter {
++	ret := make([]namedParameter, len(wasmFunction.params))
++	for i := range ret {
++		ret[i].name = wasmFunction.params[i]
++	}
++	return ret
++}

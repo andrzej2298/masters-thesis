@@ -1,0 +1,577 @@
+~/magisterka/wasmer_bson/speed_tests/execution_tests$ for i in $(seq 1 100); do echo "------------------------- $i"; timeout 5 sudo strace -T -ttt ./jsonnet file_function.jsonnet 2>&1 1>/dev/null | grep -A 2 -B 2 inside; echo "------------"; timeout 5 sudo strace -T -ttt ../../../../file 2>&1 1>/dev/null | grep -A 2 -B 2 inside; done > strace_results.txt
+------------------------- 1
+1667148793.915040 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000083>
+1667148793.915341 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000136>
+1667148793.915613 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000090>
+1667148793.915842 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000136>
+1667148793.916153 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000101>
+------------
+1667148793.977069 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000127>
+1667148793.977351 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000089>
+1667148793.977631 write(1, "inside\n", 7) = 7 <0.000082>
+1667148793.977900 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000137>
+1667148793.978201 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000132>
+------------------------- 3
+1667148794.496515 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000085>
+1667148794.496756 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000081>
+1667148794.496976 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000112>
+1667148794.497220 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000068>
+1667148794.497429 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000108>
+------------
+1667148794.562877 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000070>
+1667148794.563026 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000072>
+1667148794.563224 write(1, "inside\n", 7) = 7 <0.000107>
+1667148794.563468 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000084>
+1667148794.563660 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000072>
+------------------------- 5
+1667148799.935345 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000094>
+1667148799.935598 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000092>
+1667148799.935875 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000067>
+1667148799.936128 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000086>
+1667148799.936347 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000107>
+------------
+1667148799.996627 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000122>
+1667148799.996904 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000132>
+1667148799.997182 write(1, "inside\n", 7) = 7 <0.000123>
+1667148799.997502 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000043>
+1667148799.997767 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000102>
+------------------------- 8
+1667148805.631613 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000091>
+1667148805.631907 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000094>
+1667148805.632235 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000104>
+1667148805.632549 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000085>
+1667148805.632788 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000089>
+------------
+1667148805.697556 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000133>
+1667148805.697812 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000102>
+1667148805.698075 write(1, "inside\n", 7) = 7 <0.000109>
+1667148805.698371 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000112>
+1667148805.698681 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000108>
+------------------------- 10
+1667148811.042030 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000081>
+1667148811.042288 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000114>
+1667148811.042617 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000115>
+1667148811.042902 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000081>
+1667148811.043167 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000116>
+------------
+1667148811.114452 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000221>
+1667148811.114837 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000079>
+1667148811.115148 write(1, "inside\n", 7) = 7 <0.000082>
+1667148811.115373 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000080>
+1667148811.115651 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000117>
+------------------------- 11
+1667148811.353429 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000118>
+1667148811.353691 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000111>
+1667148811.353971 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000109>
+1667148811.354266 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000090>
+1667148811.354587 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000132>
+------------
+1667148811.418049 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000094>
+1667148811.418260 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000073>
+1667148811.418478 write(1, "inside\n", 7) = 7 <0.000123>
+1667148811.418705 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000054>
+1667148811.418838 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000082>
+------------------------- 17
+1667148837.103513 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000068>
+1667148837.103725 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000101>
+1667148837.104013 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000119>
+1667148837.104310 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000192>
+1667148837.104664 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000085>
+------------
+1667148837.172287 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000162>
+1667148837.172594 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000065>
+1667148837.172801 write(1, "inside\n", 7) = 7 <0.000144>
+1667148837.173103 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000098>
+1667148837.173384 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000102>
+------------------------- 18
+1667148837.424186 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000082>
+1667148837.424488 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000078>
+1667148837.424834 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000103>
+1667148837.425094 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000073>
+1667148837.425301 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000111>
+------------
+1667148837.487843 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000144>
+1667148837.488139 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000181>
+1667148837.488626 write(1, "inside\n", 7) = 7 <0.000100>
+1667148837.488863 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000067>
+1667148837.489028 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000099>
+------------------------- 19
+1667148837.712795 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000112>
+1667148837.713126 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000118>
+1667148837.713555 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000110>
+1667148837.713886 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000115>
+1667148837.714142 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000087>
+------------
+1667148837.778324 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000289>
+1667148837.778808 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000110>
+1667148837.779058 write(1, "inside\n", 7) = 7 <0.000156>
+1667148837.779391 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000160>
+1667148837.779726 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000066>
+------------------------- 21
+1667148838.344310 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000087>
+1667148838.344529 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000066>
+1667148838.344752 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000105>
+1667148838.345011 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000093>
+1667148838.345217 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000069>
+------------
+1667148838.408294 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000108>
+1667148838.408529 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000068>
+1667148838.408746 write(1, "inside\n", 7) = 7 <0.000068>
+1667148838.408952 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000059>
+1667148838.409116 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000077>
+------------------------- 22
+1667148838.652569 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000063>
+1667148838.652776 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000088>
+1667148838.653021 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000087>
+1667148838.653246 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000067>
+1667148838.653441 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000055>
+------------
+1667148838.721729 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000080>
+1667148838.721958 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000095>
+1667148838.722194 write(1, "inside\n", 7) = 7 <0.000094>
+1667148838.722516 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000075>
+1667148838.722739 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000122>
+------------------------- 23
+1667148838.947945 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000084>
+1667148838.948161 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000049>
+1667148838.948299 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000170>
+1667148838.948596 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000073>
+1667148838.948775 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000087>
+------------
+1667148839.010872 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000121>
+1667148839.011137 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000105>
+1667148839.011390 write(1, "inside\n", 7) = 7 <0.000087>
+1667148839.011643 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000125>
+1667148839.011900 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000093>
+------------------------- 24
+1667148839.257046 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000087>
+1667148839.257334 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000133>
+1667148839.257661 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000090>
+1667148839.257928 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000119>
+1667148839.258216 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000089>
+------------
+1667148839.323101 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000091>
+1667148839.323365 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000099>
+1667148839.323628 write(1, "inside\n", 7) = 7 <0.000109>
+1667148839.323904 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000096>
+1667148839.324106 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000119>
+------------------------- 26
+1667148844.689747 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000076>
+1667148844.690017 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000076>
+1667148844.690256 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000153>
+1667148844.690614 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000139>
+1667148844.690887 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000088>
+------------
+1667148844.751784 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000078>
+1667148844.751983 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000099>
+1667148844.752209 write(1, "inside\n", 7) = 7 <0.000053>
+1667148844.752386 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000162>
+1667148844.752691 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000071>
+------------------------- 27
+1667148844.994549 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000097>
+1667148844.994814 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000100>
+1667148844.995077 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000139>
+1667148844.995394 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000096>
+1667148844.995672 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000147>
+------------
+1667148845.061099 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000059>
+1667148845.061266 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000055>
+1667148845.061475 write(1, "inside\n", 7) = 7 <0.000127>
+1667148845.061712 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000071>
+1667148845.061882 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000129>
+------------------------- 29
+1667148850.348137 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000095>
+1667148850.348394 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000087>
+1667148850.348670 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000116>
+1667148850.348974 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000094>
+1667148850.349195 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000099>
+------------
+1667148850.420932 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000150>
+1667148850.421248 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000131>
+1667148850.421576 write(1, "inside\n", 7) = 7 <0.000102>
+1667148850.421805 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000174>
+1667148850.422084 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000108>
+------------------------- 30
+1667148850.636551 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000076>
+1667148850.636787 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000170>
+1667148850.637236 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000104>
+1667148850.637572 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000112>
+1667148850.637830 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000190>
+------------
+1667148850.701642 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000060>
+1667148850.701822 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000132>
+1667148850.702096 write(1, "inside\n", 7) = 7 <0.000130>
+1667148850.702333 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000104>
+1667148850.702538 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000075>
+------------------------- 31
+1667148850.942387 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000094>
+1667148850.942624 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000070>
+1667148850.942845 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000074>
+1667148850.943136 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000080>
+1667148850.943342 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000095>
+------------
+1667148851.006060 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000119>
+1667148851.006370 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000127>
+1667148851.006684 write(1, "inside\n", 7) = 7 <0.000094>
+1667148851.007121 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000093>
+1667148851.007385 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000099>
+------------------------- 37
+1667148876.668505 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000125>
+1667148876.668790 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000062>
+1667148876.669001 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000095>
+1667148876.669250 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000080>
+1667148876.669458 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000066>
+------------
+1667148876.731783 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000089>
+1667148876.732020 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000112>
+1667148876.732291 write(1, "inside\n", 7) = 7 <0.000160>
+1667148876.732615 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000128>
+1667148876.732902 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000080>
+------------------------- 39
+1667148882.108180 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000071>
+1667148882.108469 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000092>
+1667148882.108730 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000096>
+1667148882.109027 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000089>
+1667148882.109272 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000099>
+------------
+1667148882.173825 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000105>
+1667148882.174098 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000139>
+1667148882.174508 write(1, "inside\n", 7) = 7 <0.000176>
+1667148882.174891 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000084>
+1667148882.175123 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000115>
+------------------------- 43
+1667148897.682871 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000090>
+1667148897.683094 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000090>
+1667148897.683387 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000155>
+1667148897.683717 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000129>
+1667148897.684010 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000091>
+------------
+1667148897.746786 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000074>
+1667148897.747021 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000105>
+1667148897.747323 write(1, "inside\n", 7) = 7 <0.000110>
+1667148897.747676 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000099>
+1667148897.747959 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000121>
+------------------------- 44
+1667148897.996755 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000087>
+1667148897.996986 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000073>
+1667148897.997233 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000116>
+1667148897.997509 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000082>
+1667148897.997703 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000082>
+------------
+1667148898.062796 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000096>
+1667148898.063079 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000098>
+1667148898.063341 write(1, "inside\n", 7) = 7 <0.000154>
+1667148898.063651 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000141>
+1667148898.063938 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000100>
+------------------------- 45
+1667148898.303859 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000087>
+1667148898.304126 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000105>
+1667148898.304455 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000110>
+1667148898.304738 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000103>
+1667148898.304992 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000108>
+------------
+1667148898.375266 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000125>
+1667148898.375536 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000099>
+1667148898.375854 write(1, "inside\n", 7) = 7 <0.000113>
+1667148898.376101 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000091>
+1667148898.376289 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000192>
+------------------------- 47
+1667148898.884742 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000070>
+1667148898.885019 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000075>
+1667148898.885269 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000178>
+1667148898.885620 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000074>
+1667148898.885826 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000080>
+------------
+1667148898.948956 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000095>
+1667148898.949183 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000069>
+1667148898.949514 write(1, "inside\n", 7) = 7 <0.000077>
+1667148898.949724 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000069>
+1667148898.949921 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000118>
+------------------------- 50
+1667148909.342242 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000057>
+1667148909.342410 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000061>
+1667148909.342589 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000084>
+1667148909.342975 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000080>
+1667148909.343175 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000094>
+------------
+1667148909.407920 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000123>
+1667148909.408174 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000138>
+1667148909.408448 write(1, "inside\n", 7) = 7 <0.000117>
+1667148909.408683 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000073>
+1667148909.408939 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000118>
+------------------------- 54
+1667148915.286283 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000067>
+1667148915.286453 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000065>
+1667148915.286649 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000073>
+1667148915.286886 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000085>
+1667148915.287082 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000098>
+------------
+1667148915.353900 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000101>
+1667148915.354113 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000079>
+1667148915.354324 write(1, "inside\n", 7) = 7 <0.000111>
+1667148915.354568 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000098>
+1667148915.354902 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000092>
+------------------------- 55
+1667148915.592612 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000067>
+1667148915.592781 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000082>
+1667148915.593056 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000093>
+1667148915.593328 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000080>
+1667148915.593535 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000077>
+------------
+1667148915.657528 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000087>
+1667148915.657749 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000051>
+1667148915.657965 write(1, "inside\n", 7) = 7 <0.000085>
+1667148915.658195 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000067>
+1667148915.658352 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000082>
+------------------------- 57
+1667148920.998136 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000103>
+1667148920.998484 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000122>
+1667148920.998793 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000087>
+1667148920.999119 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000083>
+1667148920.999416 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000125>
+------------
+1667148921.065248 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000105>
+1667148921.065464 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000101>
+1667148921.065729 write(1, "inside\n", 7) = 7 <0.000164>
+1667148921.066083 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000099>
+1667148921.066369 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000104>
+------------------------- 58
+1667148921.291102 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000076>
+1667148921.291488 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000152>
+1667148921.291888 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000136>
+1667148921.292209 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000147>
+1667148921.292527 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000096>
+------------
+1667148921.358123 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000080>
+1667148921.358310 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000060>
+1667148921.358532 write(1, "inside\n", 7) = 7 <0.000068>
+1667148921.358712 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000047>
+1667148921.358947 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000076>
+------------------------- 59
+1667148921.677862 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000130>
+1667148921.678137 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000091>
+1667148921.678415 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000100>
+1667148921.678684 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000110>
+1667148921.678971 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000092>
+------------
+1667148921.745013 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000065>
+1667148921.745180 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000076>
+1667148921.745396 write(1, "inside\n", 7) = 7 <0.000061>
+1667148921.745564 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000085>
+1667148921.745781 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000097>
+------------------------- 61
+1667148927.101331 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000109>
+1667148927.101588 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000132>
+1667148927.102063 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000117>
+1667148927.102382 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000109>
+1667148927.102658 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000199>
+------------
+1667148927.168468 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000093>
+1667148927.168688 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000161>
+1667148927.168977 write(1, "inside\n", 7) = 7 <0.000123>
+1667148927.169270 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000096>
+1667148927.169518 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000094>
+------------------------- 64
+1667148932.776199 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000113>
+1667148932.776448 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000088>
+1667148932.776736 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000094>
+1667148932.776967 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000085>
+1667148932.777180 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000066>
+------------
+1667148932.838423 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000079>
+1667148932.838613 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000097>
+1667148932.838902 write(1, "inside\n", 7) = 7 <0.000073>
+1667148932.839081 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000101>
+1667148932.839350 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000079>
+------------------------- 65
+1667148933.072025 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000101>
+1667148933.072260 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000064>
+1667148933.072499 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000087>
+1667148933.072755 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000117>
+1667148933.072990 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000090>
+------------
+1667148933.134246 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000072>
+1667148933.134450 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000061>
+1667148933.134663 write(1, "inside\n", 7) = 7 <0.000075>
+1667148933.134886 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000048>
+1667148933.135033 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000060>
+------------------------- 67
+1667148938.486242 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000097>
+1667148938.486592 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000120>
+1667148938.486872 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000129>
+1667148938.487213 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000099>
+1667148938.487436 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000148>
+------------
+1667148938.543777 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000131>
+1667148938.544053 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000118>
+1667148938.544366 write(1, "inside\n", 7) = 7 <0.000207>
+1667148938.544732 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000087>
+1667148938.544960 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000128>
+------------------------- 68
+1667148938.778230 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000095>
+1667148938.778562 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000090>
+1667148938.778816 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000086>
+1667148938.779094 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000135>
+1667148938.779369 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000093>
+------------
+1667148938.845370 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000085>
+1667148938.845674 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000106>
+1667148938.845941 write(1, "inside\n", 7) = 7 <0.000115>
+1667148938.846175 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000134>
+1667148938.846441 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000132>
+------------------------- 70
+1667148944.204707 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000077>
+1667148944.204957 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000099>
+1667148944.205197 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000114>
+1667148944.205570 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000103>
+1667148944.205868 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000078>
+------------
+1667148944.272091 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000107>
+1667148944.272366 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000198>
+1667148944.272744 write(1, "inside\n", 7) = 7 <0.000114>
+1667148944.273003 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000101>
+1667148944.273250 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000108>
+------------------------- 74
+1667148959.797665 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000101>
+1667148959.797922 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000103>
+1667148959.798217 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000091>
+1667148959.798494 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000089>
+1667148959.798789 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000080>
+------------
+1667148959.863268 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000102>
+1667148959.863557 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000088>
+1667148959.863787 write(1, "inside\n", 7) = 7 <0.000078>
+1667148959.863996 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000081>
+1667148959.864200 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000119>
+------------------------- 75
+1667148960.116722 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000093>
+1667148960.117003 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000137>
+1667148960.117317 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000107>
+1667148960.117615 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000108>
+1667148960.117875 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000109>
+------------
+1667148960.182070 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000102>
+1667148960.182323 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000117>
+1667148960.182758 write(1, "inside\n", 7) = 7 <0.000152>
+1667148960.183065 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000125>
+1667148960.183351 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000092>
+------------------------- 76
+1667148960.421116 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000087>
+1667148960.421438 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000100>
+1667148960.421704 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000093>
+1667148960.421958 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000099>
+1667148960.422210 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000112>
+------------
+1667148960.484966 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000124>
+1667148960.485270 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000083>
+1667148960.485685 write(1, "inside\n", 7) = 7 <0.000120>
+1667148960.485975 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000140>
+1667148960.486342 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000185>
+------------------------- 78
+1667148965.831908 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000090>
+1667148965.832143 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000096>
+1667148965.832398 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000077>
+1667148965.832759 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000068>
+1667148965.832981 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000071>
+------------
+1667148965.895162 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000083>
+1667148965.895364 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000081>
+1667148965.895603 write(1, "inside\n", 7) = 7 <0.000118>
+1667148965.895838 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000083>
+1667148965.896015 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000074>
+------------------------- 80
+1667148966.416212 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000116>
+1667148966.416478 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000167>
+1667148966.416869 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000129>
+1667148966.417250 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000140>
+1667148966.417618 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000179>
+------------
+1667148966.482513 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000107>
+1667148966.482746 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000071>
+1667148966.482978 write(1, "inside\n", 7) = 7 <0.000077>
+1667148966.483199 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000108>
+1667148966.483432 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000084>
+------------------------- 81
+1667148966.719758 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000084>
+1667148966.720018 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000084>
+1667148966.720267 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000098>
+1667148966.720562 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000085>
+1667148966.720861 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000101>
+------------
+1667148966.785476 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000265>
+1667148966.785915 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000142>
+1667148966.786264 write(1, "inside\n", 7) = 7 <0.000117>
+1667148966.786546 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000103>
+1667148966.786818 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000092>
+------------------------- 83
+1667148972.125397 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000102>
+1667148972.125681 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000093>
+1667148972.125978 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000071>
+1667148972.126240 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000143>
+1667148972.126533 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000125>
+------------
+1667148972.192988 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000091>
+1667148972.193215 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000124>
+1667148972.193542 write(1, "inside\n", 7) = 7 <0.000085>
+1667148972.193899 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000078>
+1667148972.194124 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000074>
+------------------------- 84
+1667148972.434066 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000070>
+1667148972.434261 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000103>
+1667148972.434526 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000094>
+1667148972.434842 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000084>
+1667148972.435070 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000078>
+------------
+1667148972.495931 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000084>
+1667148972.496153 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000160>
+1667148972.496460 write(1, "inside\n", 7) = 7 <0.000138>
+1667148972.496733 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000096>
+1667148972.496956 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000100>
+------------------------- 90
+1667148997.455025 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000102>
+1667148997.455272 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000099>
+1667148997.455528 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000095>
+1667148997.455861 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000086>
+1667148997.456091 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000107>
+------------
+1667148997.526098 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000119>
+1667148997.526355 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000108>
+1667148997.526603 write(1, "inside\n", 7) = 7 <0.000095>
+1667148997.526916 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000083>
+1667148997.527197 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000155>
+------------------------- 91
+1667148997.776965 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000095>
+1667148997.777205 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000111>
+1667148997.777522 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000111>
+1667148997.777862 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000081>
+1667148997.778070 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000090>
+------------
+1667148997.842901 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000072>
+1667148997.843129 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000099>
+1667148997.843381 write(1, "inside\n", 7) = 7 <0.000082>
+1667148997.843627 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000195>
+1667148997.843937 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000128>
+------------------------- 95
+1667149008.538346 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000112>
+1667149008.538645 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000075>
+1667149008.538988 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000174>
+1667149008.539367 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000099>
+1667149008.539617 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000175>
+------------
+1667149008.605042 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000145>
+1667149008.605331 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000121>
+1667149008.605621 write(1, "inside\n", 7) = 7 <0.000217>
+1667149008.605967 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000092>
+1667149008.606178 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000079>
+------------------------- 96
+1667149008.843628 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000095>
+1667149008.843958 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000092>
+1667149008.844202 writev(1, [{iov_base="inside\n", iov_len=7}], 1) = 7 <0.000094>
+1667149008.844460 clock_getres(CLOCK_REALTIME, {tv_sec=0, tv_nsec=1}) = 0 <0.000106>
+1667149008.844726 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000139>
+------------
+1667149008.905155 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000142>
+1667149008.905475 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000091>
+1667149008.905807 write(1, "inside\n", 7) = 7 <0.000073>
+1667149008.906033 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000131>
+1667149008.906345 clock_getres(CLOCK_REALTIME, NULL) = 0 <0.000167>
